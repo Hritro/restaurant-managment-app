@@ -46,7 +46,7 @@ async function run() {
   try {
 
     const db = client.db('restaurant')
-    const foodCollention = db.collection('foods')
+    const foodcollection = db.collection('foods')
 
 
     app.post('/jwt', async(req, res) =>{
@@ -63,14 +63,14 @@ async function run() {
       res.send({message: 'Token generated and has been saved on the cookie...!'})
     })
 
-    app.get('/test', verifyJwt, (req,res) =>{
+    app.get('/test', (req,res) =>{
       res.send({message: 'Token verification successful!!'})
     })
     //add food
-    app.post('/add-food', async(req,res) =>{
+    app.post('/add-food',verifyJwt, async(req,res) =>{
       const food = req.body
       try{
-        const result = await foodCollention.insertOne(food)
+        const result = await foodcollection.insertOne(food)
         res.status(200).send({message:'Food item added successfully.'})
       }catch(error){
         console.log(error)
@@ -81,9 +81,19 @@ async function run() {
     //get all foods
     app.get('/all-foods', async(req,res) =>{
       try{
-        const result = await foodCollention.find().toArray()
+        const result = await foodcollection.find().toArray()
         res.status(200).send(result)
 
+      }catch(error){
+        console.log(error)
+        res.status(500).send({message: 'Something went wrong!', error: error})
+      }
+    })
+    //top food items
+    app.get('/top-foods', async(req,res) =>{
+      try{
+        const result = await foodcollection.find().limit(6).toArray()
+        res.status(200).send(result) 
       }catch(error){
         console.log(error)
         res.status(500).send({message: 'Something went wrong!', error: error})
