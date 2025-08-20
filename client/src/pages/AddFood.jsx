@@ -71,6 +71,12 @@ const AddFood = () => {
             required
           />
         </div>
+
+        {
+          formData.foodImage && <div>
+            <img src={formData.foodImage}/>
+          </div>
+        }
  
         {/* Food Category */}
         <div>
