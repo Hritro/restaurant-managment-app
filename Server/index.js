@@ -1,5 +1,5 @@
 const express = require('express')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser');
@@ -78,10 +78,32 @@ async function run() {
       }
     })
 
+    //update food
+    app.put('/update-food', async(req,res) =>{
+      const food = req.body
+      const {_id,...data} = food;
+      try{
+        const result = await foodcollection.updateOne({_id: new ObjectId(food._id)},{$set: data})
+        res.status(200).send({message:'Food item updated successfully.'})
+      }catch(error){
+        console.log(error)
+        res.status(500).send({message: 'Something went wrong!', error: error})
+      }
+    })
+
     //get all foods
     app.get('/all-foods', async(req,res) =>{
+      const {search} = req.query
       try{
-        const result = await foodcollection.find().toArray()
+        let result;
+        const searchQuery = {
+          foodName: {$regex: search, $options: 'i'}
+        }
+        if(search){
+          result = await foodcollection.find(searchQuery).toArray()
+        }else{
+          result = await foodcollection.find({}).toArray()
+        }
         res.status(200).send(result)
 
       }catch(error){
@@ -93,6 +115,30 @@ async function run() {
     app.get('/top-foods', async(req,res) =>{
       try{
         const result = await foodcollection.find().limit(6).toArray()
+        res.status(200).send(result) 
+      }catch(error){
+        console.log(error)
+        res.status(500).send({message: 'Something went wrong!', error: error})
+      }
+    })
+
+    //single food
+    app.get('/food/:id', async(req,res) =>{
+      const id = req.params.id
+      try{
+        const result = await foodcollection.findOne({_id: new ObjectId(id)})
+        res.status(200).send(result) 
+      }catch(error){
+        console.log(error)
+        res.status(500).send({message: 'Something went wrong!', error: error})
+      }
+    })
+
+    //get by email
+    app.get('/myfood/:email', async(req,res) =>{
+      const email = req.params.email
+      try{
+        const result = await foodcollection.find({addedByEmail: email}).toArray()
         res.status(200).send(result) 
       }catch(error){
         console.log(error)
