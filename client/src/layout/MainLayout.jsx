@@ -6,7 +6,7 @@ const MainLayout = () => {
     return (
         <div>
             <NavBar></NavBar>
-            <div className='max-w-7xl mx-auto mt-10'>
+            <div className='max-w-7xl mx-auto mt-3'>
                 <Outlet></Outlet>
             </div>
             {/* To Do Footer */}

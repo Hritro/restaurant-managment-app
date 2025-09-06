@@ -1,8 +1,8 @@
 import { Link } from "react-router";
 
-const FoodCard = ({ food }) => {
-  return (
-    <div className="h-[400px] border border-gray-200 p-3 rounded-xl shadow-lg flex flex-col">
+const MyFoodCard = ({food}) => {
+    return (
+         <div className="h-[400px] border border-gray-200 p-3 rounded-xl shadow-lg flex flex-col">
       {/* Image Section */}
       <div className="h-54 w-full bg-gray-100 rounded-lg overflow-hidden">
         <img
@@ -34,12 +34,12 @@ const FoodCard = ({ food }) => {
           </div>
         </div>
 
-        <Link to={`/food/${food._id}`}>
-          <button className="btn btn-dash w-full mt-3">View Details</button>
+        <Link to={`/update-food/${food._id}`}>
+          <button className="btn btn-dash w-full mt-3">Update Item</button>
         </Link>
       </div>
     </div>
-  );
+    );
 };
 
-export default FoodCard;
+export default MyFoodCard;
